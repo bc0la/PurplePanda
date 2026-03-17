@@ -124,3 +124,10 @@ bin/*
 .DS_Store
 /*/.DS_Store
 /*/*/.DS_Store
+
+# Claude
+CLAUDE.md
+.claude/
+
+# GCP project filter
+gcp_projects.txt

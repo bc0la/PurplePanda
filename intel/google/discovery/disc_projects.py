@@ -26,6 +26,9 @@ class DiscProjects(GcpDisc):
 
         prep_http = self.service.projects()#.list()
         projects: List[str] = self.execute_http_req(prep_http, "projects")
+        if self.gcp_projects:
+            projects = [p for p in projects if p.get("projectId") in self.gcp_projects]
+            self.logger.info(f"Filtered to {len(projects)} projects: {self.gcp_projects}")
         self._disc_loop(projects, self._disc_projects, __name__.split(".")[-1])
         self._extend_basic_roles_to_projects() #Extend the basic roles to the projects
 

@@ -414,6 +414,7 @@ class GcpDisc(GcpDiscClient):
         if kwargs.get("version"): self.version = kwargs.get("version")
         self.gcp_get_secret_values = kwargs.get("gcp_get_secret_values", False)
         self.gcp_get_kms = kwargs.get("gcp_get_kms", False)
+        self.gcp_projects = kwargs.get("gcp_projects", [])
         self.cred = cred
         self.service = googleapiclient.discovery.build(self.resource, self.version, credentials=cred, cache_discovery=False)
         self.task_name = "Google"

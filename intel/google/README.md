@@ -69,6 +69,15 @@ python3 main.py -p google --gcp-get-secret-values --gcp-get-kms -e
 ### Google module params
 - `--gcp-get-secret-values`: Use this param to indicate to PurplePanda to try to get the secret values (*by default no secrets values ara gathered*)
 - `--gcp-get-kms`: Use this param to enumerate all KMS locations (this will take hours probably, so by default only "global" is checked)
+- `--gcp-projects`: Filter which GCP projects to enumerate. Accepts a comma-separated list of project IDs or a path to a file with one project ID per line. If omitted and a `gcp_projects.txt` file exists in the working directory, it will be loaded automatically. Lines starting with `#` are ignored. Org-level and folder-level discovery (IAM, policies, etc.) is unaffected by this filter.
+
+Example `gcp_projects.txt`:
+```
+# Production projects
+my-prod-project
+my-staging-project
+# Exclude sys-* projects by simply not listing them
+```
 
 ## Permissions configuration
 If you are part of a **Blue Team or Purple Team**, I would suggest you to launch this module with an **account with at least the following roles over the organization**:

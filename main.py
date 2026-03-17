@@ -95,6 +95,7 @@ def main():
 
     parser.add_argument('--gcp-get-secret-values', action='store_true', default=False, required=False, help=f'Get the secret values (if you have access')
     parser.add_argument('--gcp-get-kms', action='store_true', default=False, required=False, help=f'Enumerate KMS (need to check every location on each project), might some hours)')
+    parser.add_argument('--gcp-projects', default="", required=False, help=f'Comma-separated list of GCP project IDs, or path to a file with one project ID per line (default: gcp_projects.txt if it exists)')
 
     args = parser.parse_args()
     platforms = args.platforms.lower().split(",") if args.platforms else []
@@ -131,6 +132,18 @@ def main():
 
     gcp_get_secret_values = args.gcp_get_secret_values
     gcp_get_kms = args.gcp_get_kms
+    gcp_projects_arg = args.gcp_projects
+    gcp_projects = []
+    if gcp_projects_arg:
+        if os.path.isfile(gcp_projects_arg):
+            with open(gcp_projects_arg) as f:
+                gcp_projects = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+        else:
+            gcp_projects = [p.strip() for p in gcp_projects_arg.split(",") if p.strip()]
+    elif os.path.isfile("gcp_projects.txt"):
+        with open("gcp_projects.txt") as f:
+            gcp_projects = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+        logger.info(f"Loaded {len(gcp_projects)} projects from gcp_projects.txt")
 
     set_verbose(args.verbose)
 
@@ -195,7 +208,8 @@ def main():
             functions.append((PurplePandaGoogle().discover, "google",
                 {
                     "gcp_get_secret_values": gcp_get_secret_values,
-                    "gcp_get_kms": gcp_get_kms
+                    "gcp_get_kms": gcp_get_kms,
+                    "gcp_projects": gcp_projects
                 }
             ))
 
